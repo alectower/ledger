@@ -1,0 +1,14 @@
+{
+  "repository": {},
+  "dependencies": {
+    "brunch": "~2.8.0",
+    "babel-brunch": "~6.0.0",
+    "clean-css-brunch": "~1.8.0",
+    "sass-brunch": "^2.0.0",
+    "css-brunch": "~1.7.0",
+    "javascript-brunch": "~1.8.0",
+    "jquery": "^2.2.4",
+    "foundation-sites": "~5",
+    "uglify-js-brunch": "~1.7.0"
+  }
+}
