@@ -1,2 +1,11 @@
 .row
-
+  .columns.large-6.assets
+    = render "balance_table.html", caption: "Assets", list: @assets
+  .columns.large-6.liabilities
+    = render "balance_table.html", caption: "Liabilities", list: @liabilities
+.row
+  .text-center
+    %a(id="sync") Sync
+  .row
+    .columns.large-12
+      #log

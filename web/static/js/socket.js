@@ -51,12 +51,53 @@ let socket = new Socket("/socket")
 // Finally, pass the token on connect as below. Or remove it
 // from connect if you don't care about authentication.
 
-socket.connect({token: window.userToken})
+socket.connect()
 
 // Now that you are connected, you can join channels with a topic:
-let channel = socket.channel("topic:subtopic", {})
+let channel = socket.channel("sync", {})
 channel.join()
-  .receive("ok", resp => { console.log("Joined succesffuly", resp) })
+  .receive("ok", resp => {
+    console.log("Joined succesffuly", resp);
+    $('#log').empty();
+  })
   .receive("error", resp => { console.log("Unabled to join", resp) })
+
+channel.on("update", function(data) {
+  $('#log').append("<div>" + data.log + "</div>");
+  $('#log').scrollTop($('#log')[0].scrollHeight);
+});
+
+channel.on("balance_update", function(data) {
+  var formatBalance = function(balance) {
+    return "$" + (balance / 100).toFixed(2);
+  };
+
+  var account = $('#' + data.account_id + " .balance");
+  if (account.length == 0) {
+    var row = "<tr class='account' id='" + data.account_id + "'>" +
+      "<td class='name'>" + data.name + "</td>" +
+      "<td class='balance' data-balance='" + data.balance + "'>" +
+      formatBalance(data.balance) + "</td>" +
+      "</tr>"
+    if (data.type == 0) {
+      $('.assets .total').before(row);
+    } else {
+      $('.liabilities .total').before(row);
+    }
+    account = $('#' + data.account_id + " .balance");
+  }
+  account.html(formatBalance(data.balance));
+  account.data('balance', data.balance);
+
+  var total = 0;
+  var accountTable = account.parent().parent();
+  accountTable.find('.account .balance').
+    each(function(i, n) { total += parseInt($(n).data('balance')); });
+  accountTable.find('.total .balance').html(formatBalance(total));
+});
+
+$("#sync").click(function() {
+  channel.push("sync_all", {});
+});
 
 export default socket

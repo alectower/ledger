@@ -3,6 +3,7 @@ defmodule Ledger.UserSocket do
 
   ## Channels
   # channel "rooms:*", Ledger.RoomChannel
+  channel "sync", Ledger.SyncChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

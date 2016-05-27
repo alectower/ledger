@@ -1,0 +1,14 @@
+%table.table(width="100%")
+  %caption= @caption
+  %thead
+    %th Name
+    %th Balance
+  %tbody
+    - for account <- @list do
+      %tr.account(id="#{account.id}")
+        %td.name= account.name
+        %td.balance(data-balance="#{account.balance}")= "#{account |> display_balance}"
+    %tr.total
+      %td.name Total
+      %td.balance
+        %b= @list |> Enum.map(&(&1.balance)) |> Enum.sum |> display_balance

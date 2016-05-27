@@ -1,5 +1,11 @@
 @import "settings";
 @import "foundation";
 
-.home {
+main {
+  margin-top: 30px;
+}
+
+#log {
+  height: 150px;
+  overflow: scroll;
 }

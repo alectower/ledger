@@ -22,6 +22,9 @@ config :logger, :console,
 config :phoenix, :template_engines,
   haml: PhoenixHaml.Engine
 
+config :hound, driver: "phantomjs", port: 8080, http: [connect_timeout: 1000000, timeout: 1000000, recv_timeout: 1000000]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
+import_config "env.exs"
