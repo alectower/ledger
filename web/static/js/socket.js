@@ -93,7 +93,7 @@ channel.on("balance_update", function(data) {
   var accountTable = account.parent().parent();
   accountTable.find('.account .balance').
     each(function(i, n) { total += parseInt($(n).data('balance')); });
-  accountTable.find('.total .balance').html(formatBalance(total));
+  accountTable.find('.total .balance').html("<b>" + formatBalance(total) + "</b");
 });
 
 $("#sync").click(function() {

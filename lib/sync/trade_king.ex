@@ -1,10 +1,19 @@
 defmodule Ledger.Sync.TradeKing do
+  use GenServer
   alias Ledger.Endpoint
   alias Ledger.Repo
   alias Ledger.Account
   alias Ledger.Sync.Oauth
 
+  def start_link do
+    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+  end
+
   def fetch_data do
+    GenServer.call(__MODULE__, :fetch_data, 10000000)
+  end
+
+  def handle_call(:fetch_data, _from, state) do
     Endpoint.broadcast! "sync", "update", %{log: "TradeKing: starting sync"}
 
     url = "https://api.tradeking.com/v1/accounts/balances.json"
@@ -42,6 +51,8 @@ defmodule Ledger.Sync.TradeKing do
     model_changeset = Ecto.Changeset.change model, balance: balance
     {:ok, model} = Repo.update model_changeset
 
+    Endpoint.broadcast! "sync", "update", %{log: "TradeKing: done syncing!"}
     Endpoint.broadcast! "sync", "balance_update", %{account_id: model.id, name: model.name, balance: model.balance, type: model.type}
+    {:reply, :ok, state}
   end
 end

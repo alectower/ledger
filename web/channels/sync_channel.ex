@@ -6,13 +6,7 @@ defmodule Ledger.SyncChannel do
   end
 
   def handle_in("sync_all", message, socket) do
-    Ledger.Sync.start_link
+    Ledger.Sync.run
     {:noreply, socket}
   end
-
-  #def handle_out("update", message, socket) do
-  #  IO.puts "Sending update"
-  #  push socket, "update", message
-  #  {:noreply, socket}
-  #end
 end

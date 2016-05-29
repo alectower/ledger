@@ -1,10 +1,19 @@
 defmodule Ledger.Sync.Bank do
+  use GenServer
   use Hound.Helpers
   alias Ledger.Endpoint
   alias Ledger.Repo
   alias Ledger.Account
 
+  def start_link do
+    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+  end
+
   def fetch_data do
+    GenServer.call(__MODULE__, :fetch_data, 10000000)
+  end
+
+  def handle_call(:fetch_data, _from, state) do
     Hound.start_session
     Endpoint.broadcast! "sync", "update", %{log: "Bank: starting sync"}
 
@@ -33,9 +42,10 @@ defmodule Ledger.Sync.Bank do
     click element
 
     Endpoint.broadcast! "sync", "update", %{log: "Bank: done syncing!"}
+    {:reply, :ok, state}
   end
 
-  def sign_in do
+  defp sign_in do
     element = find_element :name, "RequestedLoginID"
 
     Endpoint.broadcast! "sync", "update", %{log: "Bank: authenticating"}
@@ -49,9 +59,9 @@ defmodule Ledger.Sync.Bank do
     question = visible_text element
 
     answer = cond do
-      question =~ ~r/mascot/ -> 'tiger'
-      question =~ ~r/junior high school/ -> 'st johns'
-      question =~ ~r/city was your high school/ -> 'fenton'
+      question =~ ~r/mascot/ -> Application.get_env(:ledger, :fasecu_a1)
+      question =~ ~r/junior high school/ -> Application.get_env(:ledger, :fasecu_a2)
+      question =~ ~r/city was your high school/ -> Application.get_env(:ledger, :fasecu_a3)
       true -> System.halt(0)
     end
 
@@ -69,7 +79,7 @@ defmodule Ledger.Sync.Bank do
     click element
   end
 
-  def update_balance(account, html) do
+  defp update_balance(account, html) do
     Endpoint.broadcast! "sync", "update", %{log: "Bank: Updating #{account[:name]} balance"}
     element = find_element :id, html[:account_link]
     click element
