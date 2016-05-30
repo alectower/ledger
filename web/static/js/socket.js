@@ -69,7 +69,7 @@ channel.on("update", function(data) {
 
 channel.on("balance_update", function(data) {
   var formatBalance = function(balance) {
-    return "$" + (balance / 100).toFixed(2);
+    return "$" + (balance / 100).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/, '$1,');
   };
 
   var account = $('#' + data.account_id + " .balance");
