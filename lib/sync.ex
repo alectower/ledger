@@ -4,6 +4,7 @@ defmodule Ledger.Sync do
   alias Ledger.Sync.TradeKing
   alias Ledger.Sync.Scottrade
   alias Ledger.Sync.Vanguard
+  alias Ledger.Sync.Discover
 
   def start_link do
     Supervisor.start_link(__MODULE__, [])
@@ -14,7 +15,8 @@ defmodule Ledger.Sync do
       worker(Bank, []),
       worker(TradeKing, []),
       worker(Scottrade, []),
-      worker(Vanguard, [])
+      worker(Vanguard, []),
+      worker(Discover, [])
     ]
 
     supervise(children, strategy: :one_for_one)
@@ -25,7 +27,8 @@ defmodule Ledger.Sync do
      &Bank.fetch_data/0,
      &TradeKing.fetch_data/0,
      &Scottrade.fetch_data/0,
-     &Vanguard.fetch_data/0
+     &Vanguard.fetch_data/0,
+     &Discover.fetch_data/0
    ]
    |> Enum.map(&(Task.async &1))
    |> Enum.map(&(Task.await &1, 10000000))
