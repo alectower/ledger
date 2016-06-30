@@ -4,8 +4,20 @@ defmodule Ledger.PageController do
 
   def index(conn, _params) do
     conn
-    |> assign(:assets, Repo.all(from(a in Account, where: a.type == 0, order_by: [a.name])))
-    |> assign(:liabilities, Repo.all(from(a in Account, where: a.type == 1, order_by: [a.name])))
-    |> render "index.html"
+    |> assign(:assets, accounts(:assets))
+    |> assign(:liabilities, accounts(:liabilities))
+    |> render("index.html")
+  end
+
+  defp accounts(:assets), do: accounts(0)
+  defp accounts(:liabilities), do: accounts(1)
+  defp accounts(type) do
+    Repo.all(
+      from(
+        a in Account,
+        where: a.type == ^type,
+        order_by: [a.name]
+      )
+    )
   end
 end
