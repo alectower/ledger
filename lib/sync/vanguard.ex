@@ -23,14 +23,8 @@ defmodule Ledger.Sync.Vanguard do
 
     answer_security_questions
 
-    element = find_element :id, "continueInput"
-    if element do
-      click element
-    end
-
-    execute_script "remindMeLater();"
-
-    :timer.sleep(2)
+    element = find_element :link_text, "Remind me later"
+    click element
 
     Endpoint.broadcast! "sync", "update", %{log: "Vanguard: updating balance"}
     element = find_element :id, "sHomeContentForm:respSecureHomeTab:dcAggregatePlansBalanceValue"
@@ -56,7 +50,6 @@ defmodule Ledger.Sync.Vanguard do
     Endpoint.broadcast! "sync", "balance_update", %{account_id: model.id, name: model.name, balance: model.balance, type: model.type}
 
     Endpoint.broadcast! "sync", "update", %{log: "Vanguard: done syncing!"}
-    {:reply, :ok, state}
   end
 
   defp sign_in do
