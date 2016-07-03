@@ -42,7 +42,6 @@ defmodule Ledger.Sync.Discover do
   end
 
   defp update_balance do
-    IO.inspect page_source
     element = find_element :css, ".card-details .card-balances > ul:first-child li:nth-child(2)"
     balance = visible_text element
     {balance, _} = balance
