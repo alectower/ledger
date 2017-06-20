@@ -36,8 +36,7 @@ defmodule Ledger.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:cowboy, "~> 1.0"},
      {:hound, path: "deps/hound"},
-     {:phoenix_haml, "~> 0.2.1"},
-     {:httpotion, "~> 2.2.0"}
+     {:phoenix_haml, "~> 0.2.1"}
    ]
   end
 end

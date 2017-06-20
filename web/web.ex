@@ -18,7 +18,11 @@ defmodule Ledger.Web do
 
   def model do
     quote do
-      use Ecto.Model
+      use Ecto.Schema
+
+      import Ecto
+      import Ecto.Changeset
+      import Ecto.Query
     end
   end
 
@@ -27,8 +31,8 @@ defmodule Ledger.Web do
       use Phoenix.Controller
 
       alias Ledger.Repo
-      import Ecto.Model
-      import Ecto.Query, only: [from: 1, from: 2]
+      import Ecto
+      import Ecto.Query
 
       import Ledger.Router.Helpers
     end
@@ -59,8 +63,8 @@ defmodule Ledger.Web do
       use Phoenix.Channel
 
       alias Ledger.Repo
-      import Ecto.Model
-      import Ecto.Query, only: [from: 1, from: 2]
+      import Ecto
+      import Ecto.Query
 
     end
   end
